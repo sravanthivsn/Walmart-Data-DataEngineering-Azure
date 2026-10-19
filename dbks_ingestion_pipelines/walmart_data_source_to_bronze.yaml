@@ -1,0 +1,84 @@
+resources:
+  pipelines:
+    pipeline_ingest_walmart_data_to_bronze:
+      name: ingest_walmart_data_to_bronze
+      ingestion_definition:
+        connection_name: postgres_walmart
+        objects:
+          - table:
+              source_catalog: neondb
+              source_schema: public
+              source_table: customers
+              destination_catalog: walmart_de
+              destination_schema: bronze
+              table_configuration:
+                primary_keys:
+                  - updated_timestamp
+                query_based_connector_config:
+                  cursor_columns:
+                    - customer_id
+          - table:
+              source_catalog: neondb
+              source_schema: public
+              source_table: employees
+              destination_catalog: walmart_de
+              destination_schema: bronze
+              table_configuration:
+                primary_keys:
+                  - employee_id
+                query_based_connector_config:
+                  cursor_columns:
+                    - updated_timestamp
+          - table:
+              source_catalog: neondb
+              source_schema: public
+              source_table: order_items
+              destination_catalog: walmart_de
+              destination_schema: bronze
+              table_configuration:
+                primary_keys:
+                  - updated_timestamp
+                query_based_connector_config:
+                  cursor_columns:
+                    - order_item_id
+          - table:
+              source_catalog: neondb
+              source_schema: public
+              source_table: orders
+              destination_catalog: walmart_de
+              destination_schema: bronze
+              table_configuration:
+                primary_keys:
+                  - updated_timestamp
+                query_based_connector_config:
+                  cursor_columns:
+                    - order_id
+          - table:
+              source_catalog: neondb
+              source_schema: public
+              source_table: products
+              destination_catalog: walmart_de
+              destination_schema: bronze
+              table_configuration:
+                primary_keys:
+                  - product_id
+                query_based_connector_config:
+                  cursor_columns:
+                    - updated_timestamp
+          - table:
+              source_catalog: neondb
+              source_schema: public
+              source_table: stores
+              destination_catalog: walmart_de
+              destination_schema: bronze
+              table_configuration:
+                primary_keys:
+                  - store_id
+                query_based_connector_config:
+                  cursor_columns:
+                    - updated_timestamp
+        source_type: POSTGRESQL
+      schema: bronze
+      channel: PREVIEW
+      catalog: walmart_de
+      serverless: true
